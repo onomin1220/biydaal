@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:biydaal/screen/profile.dart';
 import 'package:biydaal/screen/settings.dart';
-//import 'package:biydaal/screen/activity_list.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   final int calories;
   final int carbs;
   final int fat;
@@ -18,25 +17,18 @@ class HomeScreen extends StatefulWidget {
   });
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  int burned = 0;
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F8F2),
 
-      // ===== BOTTOM NAVIGATION =====
+      // ==== BOTTOM NAVIGATION ====
       bottomNavigationBar: Container(
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
         color: Colors.white,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // HOME
+            // HOME (Static)
             Column(
               mainAxisSize: MainAxisSize.min,
               children: const [
@@ -46,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
 
-            // DIARY
+            // DIARY (Static for now)
             Column(
               mainAxisSize: MainAxisSize.min,
               children: const [
@@ -86,7 +78,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
 
-      // ===== BODY =====
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -109,17 +100,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
 
-                  // SETTINGS button navigation
+                  // SETTINGS ICON (CLICKABLE)
                   IconButton(
                     icon: const Icon(Icons.settings, size: 28),
                     onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const SettingsScreen()),
+                          builder: (context) => const SettingsScreen(),
+                        ),
                       );
                     },
-                  )
+                  ),
                 ],
               ),
 
@@ -135,24 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: TextStyle(
                       fontSize: 20, fontWeight: FontWeight.w600)),
               const SizedBox(height: 12),
-
-              GestureDetector(
-                onTap: () async {
-                  final kcal = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ActivityListScreen(),
-                    ),
-                  );
-
-                  if (kcal != null) {
-                    setState(() {
-                      burned += kcal;
-                    });
-                  }
-                },
-                child: buildAddCard(),
-              ),
+              buildAddCard(),
 
               const SizedBox(height: 30),
 
@@ -194,7 +169,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // ---------- CALORIE CARD ----------
+  // ---------- CARD COMPONENTS ----------
+
   Widget buildCalorieCard() {
     return Container(
       padding: const EdgeInsets.all(24),
@@ -203,29 +179,35 @@ class _HomeScreenState extends State<HomeScreen> {
         borderRadius: BorderRadius.circular(22),
         boxShadow: [
           BoxShadow(
-              color: Colors.grey.shade300, blurRadius: 10, offset: Offset(0, 3))
+            color: Colors.grey.shade300,
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          )
         ],
       ),
       child: Column(
         children: [
           Text(
-            "${widget.calories}",
+            "$calories",
             style: const TextStyle(
-                fontSize: 42,
-                fontWeight: FontWeight.bold,
-                color: Colors.green),
+              fontSize: 42,
+              fontWeight: FontWeight.bold,
+              color: Colors.green,
+            ),
           ),
-          const Text("өдөрт авах калорын хэмжээ",
-              style: TextStyle(color: Colors.black45, fontSize: 16)),
+          const Text(
+            "өдөрт авах калорын хэмжээ",
+            style: TextStyle(color: Colors.black45, fontSize: 16),
+          ),
 
           const SizedBox(height: 25),
 
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              macroIndicator("Нүүрс ус", widget.carbs),
-              macroIndicator("Өөх тос", widget.fat),
-              macroIndicator("Уураг", widget.protein),
+              macroIndicator("Нүүрс ус", carbs),
+              macroIndicator("Өөх тос", fat),
+              macroIndicator("Уураг", protein),
             ],
           ),
         ],
@@ -260,7 +242,10 @@ class _HomeScreenState extends State<HomeScreen> {
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-              color: Colors.grey.shade300, blurRadius: 6, offset: Offset(0, 3))
+            color: Colors.grey.shade300,
+            blurRadius: 6,
+            offset: const Offset(0, 3),
+          )
         ],
       ),
       child: const Center(
